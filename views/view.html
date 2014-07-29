@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	
+		<link href="http://fonts.googleapis.com/css?family=Lato:100,300,400,700" media="all" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="/css/bootstrap.min.css?version=7" />
+		<link rel="stylesheet" href="/css/style.css?version=7" />
+
+		<title>Compute Banner Generation</title>
+
+		<meta name="description" value="{{description}}" />
+		<meta name="keywords" value="{% if keywords %}, {{keywords}}{% endif %} " />
+		<meta name="author" value="{% if author %}{{author}}{% else %}Reflief Life Map{% endif %} " />
+
+		{% block head %}{% endblock %}
+		{% block styles %}{% endblock %}
+	</head>
+	<body class="gradient">
+
+		<div style="width: 100%;">
+
+			<table id="table_of_run" class="table">
+
+				<tbody>
+
+					{% for y in height %}
+
+						<tr>
+
+						{% for x in width %}
+
+							<td class="td-{{x|string}}-{{y|string}}" style="background-color: {{ mapping_dict[x|string + '-' + y|string] }};">&nbsp;</td>
+
+						{% endfor %}
+
+						</tr>
+
+					{% endfor %}
+
+				</tbody>
+
+			</table>
+
+		</div>
+
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+		<script type="text/javascript">
+
+			$(document).ready(function(){
+
+				var update_page = function() {
+
+					$.ajax({
+
+						url: '/status?run={{run_obj.key.id()}}',
+						success: function(data_obj) {
+
+							for(var i = 0; i < data_obj.dots.length; i++) {
+
+								var dot_obj = data_obj.dots[i];
+
+								// console.log('td.td-' + dot_obj.x + '-' + dot_obj.y);
+								$('td.td-' + dot_obj.x + '-' + dot_obj.y).css('background-color', dot_obj.target);
+
+							}
+
+							if(data_obj.done == 'false') setTimeout(update_page, 1000);
+							else {
+
+								alert("The winner for this run is {{run_obj.winner}}");
+
+							}
+
+						},
+						error: function() { setTimeout(update_page, 1000); },
+						failure: function() { setTimeout(update_page, 1000); }
+
+					});
+
+				};
+
+				setTimeout(update_page, 1000);
+
+			});
+
+			
+
+		</script>
+
+	</body>
+</html>

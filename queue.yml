@@ -1,0 +1,5 @@
+queue:
+- name: banner-dots
+  mode: pull
+  acl:
+  - writer_email: 402009290774-0qf0l9vf7dej2atr7pv32oofljlm2i6s@developer.gserviceaccount.com
